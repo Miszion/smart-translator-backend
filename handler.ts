@@ -11,7 +11,7 @@ const getResponse = async (client: OpenAI, text: string, context: string) => {
     messages: [{ role: 'system', content: context}, { role: 'user', content: text}],
     model: 'gpt-4o-mini'
   });
-  return response;
+  return response.choices[0].message.content;
 }
 
 const callSecretsManager = async () => {
