@@ -1,0 +1,33 @@
+# "org" ensures this Service is used with the correct Serverless Framework Access Key.
+org: miszion
+# "app" enables Serverless Framework Dashboard features and sharing them with other Services.
+app: smart-translator
+# "service" is the name of this project. This will also be added to your AWS resource names.
+service: smart-translator
+
+provider:
+  name: aws
+  runtime: nodejs20.x
+  stage: dev
+  apiGateway:
+    apiKeys:
+      - name: APIKey
+        description: This is the API Key that will limit access to this API
+  iam:
+    role:
+      statements:
+        - Effect: "Allow"
+          Action:
+            - secretsmanager:GetSecretValue
+            - secretsmanager:DescribeSecret
+          Resource:
+            - arn:aws:secretsmanager:us-east-1:778198285154:secret:prod/smart-translator-LrP6BK
+
+functions:
+  openAI:
+    handler: handler.callOpenAI
+    events:
+      - http:
+          path: /
+          method: post
+          private: true
